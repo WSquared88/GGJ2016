@@ -4,6 +4,7 @@ using System;
 
 public class Key : InteractableObject
 {
+    GameObject door;
 
 	// Use this for initialization
 	void Start ()
@@ -19,6 +20,10 @@ public class Key : InteractableObject
 
     protected override void Trigger(Collider player)
     {
-        throw new NotImplementedException();
+        if (door)
+        {
+            Destroy(door);
+            Destroy(gameObject);
+        }
     }
 }
