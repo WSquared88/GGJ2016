@@ -79,7 +79,8 @@ public class PlayerController : MonoBehaviour
             Debug.Log("started bleeding");
             if (blood)
             {
-                Instantiate(blood);
+
+                Instantiate(blood, transform.position, new Quaternion());
             }
             else
             {

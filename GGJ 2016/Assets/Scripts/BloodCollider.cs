@@ -4,11 +4,14 @@ using System.Collections;
 public class BloodCollider : MonoBehaviour
 {
     [SerializeField]
-    Object NextBloodPool;
+    GameObject NextBloodPool;
+    [SerializeField]
+    Color poolColor;
+
 	// Use this for initialization
 	void Start ()
     {
-	
+        GetComponent<Renderer>().material.color = poolColor;
 	}
 	
 	// Update is called once per frame
@@ -19,14 +22,23 @@ public class BloodCollider : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "SmallBloodPool")
+        if (isActiveAndEnabled && other.tag != "undefined" && other.tag.Contains("BloodPool"))
         {
-            if (NextBloodPool)
+            if (NextBloodPool && isEvolving(other))
             {
-                Instantiate(NextBloodPool);
                 Destroy(other.gameObject);
+                Instantiate(NextBloodPool, transform.position, new Quaternion());
                 Destroy(gameObject);
             }
         }
+    }
+
+    public bool isEvolving(Collider other)
+    {
+        if (NextBloodPool)
+        {
+            return other.tag != NextBloodPool.tag && NextBloodPool.GetComponent<BloodCollider>().isEvolving(other);
+        }
+        return true;
     }
 }
