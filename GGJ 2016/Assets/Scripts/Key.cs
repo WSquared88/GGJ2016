@@ -18,12 +18,13 @@ public class Key : InteractableObject
 
     protected override void Trigger(Collider player)
     {
-        if (objectToActivate)
+        for(int i = 0;i<objectsToActivate.Length;i++)
         {
-            ActivationObject obj = objectToActivate.GetComponent<ActivationObject>();
+            ActivationObject obj = objectsToActivate[i].GetComponent<ActivationObject>();
             if (obj)
             {
                 obj.activate();
+                //if(gameObject.)
                 Destroy(gameObject);
             }
         }

@@ -8,7 +8,7 @@ public abstract class InteractableObject : MonoBehaviour
     [SerializeField]
     protected bool isReuseable;
     [SerializeField]
-    protected GameObject objectToActivate;
+    protected GameObject[] objectsToActivate;
 
     protected bool isInUse;
 

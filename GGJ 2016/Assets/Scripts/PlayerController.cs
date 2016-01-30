@@ -56,6 +56,10 @@ public class PlayerController : MonoBehaviour
 
         transform.Rotate(Vector3.up, xMovement);
         tpsCamera.RotateAround(transform.position, -transform.right, yMovement);
+
+        float angle = Vector3.Angle(transform.position, tpsCamera.position);
+        Debug.Log("angle " + angle);
+
         tpsCamera.Translate(0, 0, Input.GetAxis("Mouse ScrollWheel") * scrollSpeed * Time.deltaTime);
 
         if (Vector3.Distance(transform.position, tpsCamera.position) < cameraCloseLimit)
