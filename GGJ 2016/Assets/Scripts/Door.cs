@@ -4,11 +4,15 @@ using System;
 
 public class Door : ActivationObject
 {
+    [SerializeField]
+    Vector3 openPos;
+
+    Vector3 closedPos;
 
 	// Use this for initialization
 	void Start ()
     {
-	
+        closedPos = transform.position;
 	}
 	
 	// Update is called once per frame
@@ -17,19 +21,25 @@ public class Door : ActivationObject
 	
 	}
 
-    protected override void activate()
+    public override void activate()
     {
-        throw new NotImplementedException();
         if (!isInUse)
         {
+            isInUse = true;
             if (isActive)
             {
-
+                Lerping.DoCoroutine(Lerping.LerpTo(transform, transform.position, closedPos, activationTime, stopUsing));
             }
             else
             {
-
+                Lerping.DoCoroutine(Lerping.LerpTo(transform, transform.position, transform.position + openPos, activationTime, stopUsing));
             }
         }
+    }
+
+    void stopUsing()
+    {
+        isInUse = false;
+        isActive = !isActive;
     }
 }

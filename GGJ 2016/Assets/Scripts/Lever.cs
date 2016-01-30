@@ -1,13 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Lever : MonoBehaviour
+public class Lever : InteractableObject
 {
+    [SerializeField]
+    bool isActive;
 
 	// Use this for initialization
 	void Start ()
     {
-	
+
 	}
 	
 	// Update is called once per frame
@@ -15,4 +17,17 @@ public class Lever : MonoBehaviour
     {
 
 	}
+
+    protected override void Trigger(Collider player)
+    {
+        if (objectToActivate)
+        {
+            ActivationObject obj = objectToActivate.GetComponent<ActivationObject>();
+            if (obj)
+            {
+                obj.activate();
+                isActive = !isActive;
+            }
+        }
+    }
 }

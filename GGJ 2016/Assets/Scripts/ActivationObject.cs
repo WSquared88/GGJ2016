@@ -3,6 +3,9 @@ using System.Collections;
 
 abstract public class ActivationObject : MonoBehaviour
 {
+    [SerializeField]
+    protected float activationTime;
+
     protected bool isActive;
     protected bool isInUse;
 
@@ -19,7 +22,7 @@ abstract public class ActivationObject : MonoBehaviour
 
 	}
 
-    protected abstract void activate();
+    public abstract void activate();
 
     public bool IsObjectInUse()
     {

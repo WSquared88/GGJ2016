@@ -16,27 +16,19 @@ public class BookCase : InteractableObject
     {
         startPos = transform.position;
     }
-	
-	// Update is called once per frame
-	void Update ()
-    {
-        if (isInUse)
-        {
-            float timeLeft = Time.time - startTime;
-            transform.position = Vector3.Lerp(startPos, startPos + destination, timeLeft);
-            if (isReuseable && timeLeft >= useTime)
-            {
-                isInUse = false;
-            }
-        }
-    }
 
     protected override void Trigger(Collider player)
     {
         player.GetComponent<PlayerController>().StartCoroutine("stopMoving", useTime);
-        startTime = Time.time;
         isInUse = true;
-        startPos = transform.position;
-        distance = Vector3.Distance(startPos, destination);
+        Lerping.DoCoroutine(Lerping.LerpTo(transform, transform.position, startPos+destination, useTime, stopUsing));
+    }
+
+    void stopUsing()
+    {
+        if (isReuseable)
+        {
+            isInUse = false;
+        }
     }
 }
