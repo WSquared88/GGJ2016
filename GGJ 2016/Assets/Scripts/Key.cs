@@ -24,8 +24,10 @@ public class Key : InteractableObject
             if (obj)
             {
                 obj.activate();
-                //if(gameObject.)
-                Destroy(gameObject);
+                if (isActiveAndEnabled)
+                {
+                    Destroy(gameObject);
+                }
             }
         }
     }
