@@ -1,58 +1,34 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class InteractableObject : MonoBehaviour
+public abstract class InteractableObject : MonoBehaviour
 {
     [SerializeField]
-    float moveTime;
+    protected float useTime;
     [SerializeField]
-    Vector3 destination;
-    [SerializeField]
-    float speed;
-    [SerializeField]
-    bool isReuseable;
+    protected bool isReuseable;
 
-    float startTime;
-    bool lerping;
-    Vector3 startPos;
-    float distance;
+    protected bool isInUse;
 
 	// Use this for initialization
 	void Start ()
     {
-        lerping = false;
-        startPos = transform.position;
-
+        isInUse = false;
 	}
 	
 	// Update is called once per frame
 	void Update ()
     {
-        if (lerping)
-        {
-            float timeLeft = Time.time - startTime;
-            transform.position = Vector3.Lerp(startPos, startPos+destination, timeLeft);
-            if (isReuseable && timeLeft >= moveTime)
-            {
-                lerping = false;
-            }
-        }
+        
 	}
 
     void OnTriggerStay(Collider other)
     {
-        if (!lerping && other.tag == "Player" && Input.GetKeyDown(KeyCode.E))
+        if (!isInUse && other.tag == "Player" && Input.GetKey(KeyCode.E))
         {
-            MoveObject(other);
+            Trigger(other);
         }
     }
 
-    void MoveObject(Collider player)
-    {
-        player.GetComponent<PlayerController>().StartCoroutine("stopMoving", moveTime);
-        startTime = Time.time;
-        lerping = true;
-        startPos = transform.position;
-        distance = Vector3.Distance(startPos, destination);
-    }
+    protected abstract void Trigger(Collider player);
 }
