@@ -4,9 +4,6 @@ using System;
 
 public class Key : InteractableObject
 {
-    [SerializeField]
-    GameObject door;
-
 	// Use this for initialization
 	void Start ()
     {
@@ -21,10 +18,14 @@ public class Key : InteractableObject
 
     protected override void Trigger(Collider player)
     {
-        if (door)
+        if (objectToActivate)
         {
-            Destroy(door);
-            Destroy(gameObject);
+            ActivationObject obj = objectToActivate.GetComponent<ActivationObject>();
+            if (obj)
+            {
+                obj.activate();
+                Destroy(gameObject);
+            }
         }
     }
 }
