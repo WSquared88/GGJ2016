@@ -28,11 +28,13 @@ public class PlayerController : MonoBehaviour
 
     Transform tpsCamera;
     bool isAlive;
+    bool canMove;
 
 	// Use this for initialization
 	void Start ()
     {
         isAlive = true;
+        canMove = true;
         tpsCamera = transform.GetChild(0);
         tpsCamera.position = startingCameraPos;
         tpsCamera.LookAt(transform);
@@ -68,7 +70,10 @@ public class PlayerController : MonoBehaviour
             Debug.Log("Turning too fast");
         }
 
-        transform.Translate(Input.GetAxis("Horizontal") * playerSpeed * Time.deltaTime, 0, Input.GetAxis("Vertical") * playerSpeed * Time.deltaTime);
+        if (canMove)
+        {
+            transform.Translate(Input.GetAxis("Horizontal") * playerSpeed * Time.deltaTime, 0, Input.GetAxis("Vertical") * playerSpeed * Time.deltaTime);
+        }
     }
 
     IEnumerator dripBlood()
@@ -79,13 +84,28 @@ public class PlayerController : MonoBehaviour
             Debug.Log("started bleeding");
             if (blood)
             {
-
-                Instantiate(blood, transform.position, new Quaternion());
+                RaycastHit hit;
+                if (Physics.Raycast(transform.position, Vector3.down, out hit))
+                {
+                    Instantiate(blood, hit.point, new Quaternion());
+                }
             }
             else
             {
                 Debug.Log("The blood is missing");
             }
         }
+    }
+
+    public IEnumerator stopMoving(float time)
+    {
+        canMove = false;
+        yield return new WaitForSeconds(time);
+        startMoving();
+    }
+
+    void startMoving()
+    {
+        canMove = true;
     }
 }

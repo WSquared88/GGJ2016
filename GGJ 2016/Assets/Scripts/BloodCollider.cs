@@ -12,33 +12,32 @@ public class BloodCollider : MonoBehaviour
 	void Start ()
     {
         GetComponent<Renderer>().material.color = poolColor;
-	}
+        //GetComponent<Renderer>().enabled = true;
+
+    }
 	
 	// Update is called once per frame
 	void Update ()
     {
-	
+
 	}
 
     void OnTriggerEnter(Collider other)
     {
-        if (isActiveAndEnabled && other.tag != "undefined" && other.tag.Contains("BloodPool"))
+        if (isActiveAndEnabled && other.tag != "undefined" && other.tag.Contains("BloodPool") && NextBloodPool && !isBloodInUpgrade(other))
         {
-            if (NextBloodPool && isEvolving(other))
-            {
-                Destroy(other.gameObject);
-                Instantiate(NextBloodPool, transform.position, new Quaternion());
-                Destroy(gameObject);
-            }
+            Destroy(other.gameObject);
+            Instantiate(NextBloodPool, (transform.position - other.transform.position) * .5f + other.transform.position, new Quaternion());
+            Destroy(gameObject);
         }
     }
 
-    public bool isEvolving(Collider other)
+    public bool isBloodInUpgrade(Collider other)
     {
         if (NextBloodPool)
         {
-            return other.tag != NextBloodPool.tag && NextBloodPool.GetComponent<BloodCollider>().isEvolving(other);
+            return other.tag == NextBloodPool.tag || NextBloodPool.GetComponent<BloodCollider>().isBloodInUpgrade(other);
         }
-        return true;
+        return false;
     }
 }
