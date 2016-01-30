@@ -8,26 +8,35 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     float sensitivityY;
     [SerializeField]
-    float scrollSpeed;
-    [SerializeField]
     float fastTurnLimit;
     [SerializeField]
     float playerSpeed;
+
+    [Header("Camera"), SerializeField]
+    Vector3 startingCameraPos;
     [SerializeField]
-    Vector3 cameraPos;
+    float scrollSpeed;
     [SerializeField]
     float cameraCloseLimit;
     [SerializeField]
     float cameraFarLimit;
 
+    [Header("Blood"), SerializeField]
+    float dripTime;
+    [SerializeField]
+    Object blood;
+
     Transform tpsCamera;
+    bool isAlive;
 
 	// Use this for initialization
 	void Start ()
     {
+        isAlive = true;
         tpsCamera = transform.GetChild(0);
-        tpsCamera.position = cameraPos;
+        tpsCamera.position = startingCameraPos;
         tpsCamera.LookAt(transform);
+        StartCoroutine("dripBlood");
 	}
 	
 	// Update is called once per frame
@@ -40,6 +49,7 @@ public class PlayerController : MonoBehaviour
     {
         float xMovement = Input.GetAxis("Mouse X") * sensitivityX * Time.deltaTime;
         float yMovement = Input.GetAxis("Mouse Y") * sensitivityY * Time.deltaTime;
+
         transform.Rotate(Vector3.up, xMovement);
         tpsCamera.RotateAround(transform.position, -transform.right, yMovement);
         tpsCamera.Translate(0, 0, Input.GetAxis("Mouse ScrollWheel") * scrollSpeed * Time.deltaTime);
@@ -59,5 +69,22 @@ public class PlayerController : MonoBehaviour
         }
 
         transform.Translate(Input.GetAxis("Horizontal") * playerSpeed * Time.deltaTime, 0, Input.GetAxis("Vertical") * playerSpeed * Time.deltaTime);
+    }
+
+    IEnumerator dripBlood()
+    {
+        while (isAlive)
+        {
+            yield return new WaitForSeconds(dripTime);
+            Debug.Log("started bleeding");
+            if (blood)
+            {
+                Instantiate(blood);
+            }
+            else
+            {
+                Debug.Log("The blood is missing");
+            }
+        }
     }
 }
