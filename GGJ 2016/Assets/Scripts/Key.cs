@@ -4,6 +4,7 @@ using System;
 
 public class Key : InteractableObject
 {
+    [SerializeField]
     GameObject door;
 
 	// Use this for initialization

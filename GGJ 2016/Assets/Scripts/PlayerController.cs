@@ -13,7 +13,7 @@ public class PlayerController : MonoBehaviour
     float playerSpeed;
 
     [Header("Camera"), SerializeField]
-    Vector3 startingCameraPos;
+    Vector3 startingCameraOffset;
     [SerializeField]
     float scrollSpeed;
     [SerializeField]
@@ -29,6 +29,7 @@ public class PlayerController : MonoBehaviour
     Transform tpsCamera;
     bool isAlive;
     bool canMove;
+    AudioSource bloodDrip;
 
 	// Use this for initialization
 	void Start ()
@@ -36,8 +37,9 @@ public class PlayerController : MonoBehaviour
         isAlive = true;
         canMove = true;
         tpsCamera = transform.GetChild(0);
-        tpsCamera.position = transform.position + startingCameraPos;
+        tpsCamera.position = transform.position + startingCameraOffset;
         tpsCamera.LookAt(transform);
+        bloodDrip = GetComponent<AudioSource>();
         StartCoroutine("dripBlood");
 	}
 	
@@ -87,6 +89,7 @@ public class PlayerController : MonoBehaviour
                 RaycastHit hit;
                 if (Physics.Raycast(transform.position, Vector3.down, out hit))
                 {
+                    bloodDrip.Play();
                     Instantiate(blood, hit.point, new Quaternion());
                 }
             }
