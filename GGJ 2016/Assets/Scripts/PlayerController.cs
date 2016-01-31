@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : LivingObject
 {
     #region player
     [SerializeField]
@@ -10,10 +10,6 @@ public class PlayerController : MonoBehaviour
     float sensitivityY;
     [SerializeField]
     float fastTurnLimit;
-    [SerializeField]
-    float playerSpeed;
-    [SerializeField]
-    float health;
     #endregion
 
     #region camera
@@ -39,7 +35,6 @@ public class PlayerController : MonoBehaviour
     #endregion
 
     Transform tpsCamera;
-    bool isAlive;
     bool canMove;
     AudioSource bloodDrip;
     int currentIndex;
@@ -47,7 +42,6 @@ public class PlayerController : MonoBehaviour
     // Use this for initialization
     void Start ()
     {
-        isAlive = true;
         canMove = true;
         tpsCamera = transform.GetChild(0);
         tpsCamera.localPosition = startingCameraOffset;
@@ -104,24 +98,11 @@ public class PlayerController : MonoBehaviour
 
         if (canMove)
         {
-            transform.Translate(Input.GetAxis("Horizontal") * playerSpeed * Time.deltaTime, 0, Input.GetAxis("Vertical") * playerSpeed * Time.deltaTime);
+            transform.Translate(Input.GetAxis("Horizontal") * speed * Time.deltaTime, 0, Input.GetAxis("Vertical") * speed * Time.deltaTime);
         }
     }
 
-    void TakeDamage(float damage)
-    {
-        health -= damage;
-        if (health <= 0)
-        {
-            die();
-        }
-    }
-
-    void die()
-    {
-        isAlive = false;
-        Destroy(gameObject);
-    }
+    
 
     IEnumerator dripBlood()
     {

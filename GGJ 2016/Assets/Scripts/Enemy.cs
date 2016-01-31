@@ -2,7 +2,7 @@
 using System.Collections;
 
 [RequireComponent (typeof (NavMeshAgent))]
-public class Enemy : MonoBehaviour
+public class Enemy : LivingObject
 {
     NavMeshAgent agent;
     Transform target;
@@ -22,7 +22,7 @@ public class Enemy : MonoBehaviour
         calculateBloodWeighting();
         if (target)
         {
-            agent.SetDestination(target.position);
+            //agent.SetDestination(target.position);
         }
 	}
 
@@ -34,35 +34,38 @@ public class Enemy : MonoBehaviour
         for (int i = 0; i < bloodList.Count; i++)
         {
             GameObject obj = (GameObject)bloodList[i];
-            BloodCollider blood = obj.GetComponent<BloodCollider>();
-            if (blood)
+            if (obj)
             {
-                int richness = blood.getIndex();
+                BloodCollider blood = obj.GetComponent<BloodCollider>();
+                if (blood)
+                {
+                    int richness = blood.getIndex();
 
-                if (obj.tag == "SmallBloodPool")
-                {
-                    richness++;
-                }
-                else if (obj.tag == "MedBloodPool")
-                {
-                    richness += 3;
-                }
-                else
-                {
-                    richness += 7;
-                }
+                    if (obj.tag == "SmallBloodPool")
+                    {
+                        richness++;
+                    }
+                    else if (obj.tag == "MedBloodPool")
+                    {
+                        richness += 3;
+                    }
+                    else
+                    {
+                        richness += 7;
+                    }
 
-                if (richness > highestRichness)
-                {
-                    highestRichness = richness;
-                    richestBlood = obj;
-                }
-                else if (richness == highestRichness)
-                {
-                    if (richness - bloodList.Count > highestRichness - bloodList.Count)
+                    if (richness > highestRichness)
                     {
                         highestRichness = richness;
                         richestBlood = obj;
+                    }
+                    else if (richness == highestRichness)
+                    {
+                        if (richness - bloodList.Count > highestRichness - bloodList.Count)
+                        {
+                            highestRichness = richness;
+                            richestBlood = obj;
+                        }
                     }
                 }
             }
@@ -80,6 +83,11 @@ public class Enemy : MonoBehaviour
         {
             bloodList.Add(other.gameObject);
         }
+    }
+
+    void OnTriggerStay(Collider other)
+    {
+
     }
 
     void OnTriggerExit(Collider other)
