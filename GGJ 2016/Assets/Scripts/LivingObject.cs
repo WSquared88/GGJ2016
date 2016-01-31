@@ -53,8 +53,13 @@ public class LivingObject : MonoBehaviour
         Destroy(gameObject);
     }
 
-    public float getDamage()
+    public float GetDamage()
     {
         return damage;
+    }
+
+    public bool IsAlive()
+    {
+        return isAlive;
     }
 }

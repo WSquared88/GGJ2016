@@ -6,13 +6,13 @@ public class MonsterKillingZone : MonoBehaviour
     [SerializeField]
     float damageCooldown;
 
-    LivingObject parent;
+    Enemy parent;
     float timeSinceLastDamage;
 
 	// Use this for initialization
 	void Start ()
     {
-        parent = transform.parent.gameObject.GetComponent<LivingObject>();
+        parent = transform.parent.gameObject.GetComponent<Enemy>();
         timeSinceLastDamage = damageCooldown;
 	}
 	
@@ -29,7 +29,11 @@ public class MonsterKillingZone : MonoBehaviour
             LivingObject obj = other.gameObject.GetComponent<LivingObject>();
             if (obj && parent)
             {
-                obj.TakeDamage(parent.getDamage());
+                obj.TakeDamage(parent.GetDamage());
+                if (!obj.IsAlive())
+                {
+                    parent.playerDied();
+                }
             }
             timeSinceLastDamage = 0;
         }
