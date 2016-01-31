@@ -20,6 +20,10 @@ public class PlayerController : MonoBehaviour
     float cameraCloseLimit;
     [SerializeField]
     float cameraFarLimit;
+    [SerializeField]
+    float cameraLowerAngleLimit;
+    [SerializeField]
+    float cameraUpperAngleLimit;
 
     [Header("Blood"), SerializeField]
     float dripTime;
@@ -37,7 +41,7 @@ public class PlayerController : MonoBehaviour
         isAlive = true;
         canMove = true;
         tpsCamera = transform.GetChild(0);
-        tpsCamera.position = transform.position + startingCameraOffset;
+        tpsCamera.position = -transform.forward * startingCameraOffset.magnitude;
         tpsCamera.LookAt(transform);
         bloodDrip = GetComponent<AudioSource>();
         StartCoroutine("dripBlood");
@@ -56,6 +60,23 @@ public class PlayerController : MonoBehaviour
 
         transform.Rotate(Vector3.up, xMovement);
         tpsCamera.RotateAround(transform.position, -transform.right, yMovement);
+
+        float angle = Vector3.Angle(-transform.forward, tpsCamera.position-transform.position);
+        if (tpsCamera.position.y < transform.position.y)
+        {
+            if (angle > cameraLowerAngleLimit)
+            {
+                tpsCamera.RotateAround(transform.position, transform.right, angle - cameraLowerAngleLimit);
+            }
+        }
+        else
+        {
+            if (angle > cameraUpperAngleLimit)
+            {
+                tpsCamera.RotateAround(transform.position, -transform.right, angle - cameraUpperAngleLimit);
+            }
+        }
+
         tpsCamera.Translate(0, 0, Input.GetAxis("Mouse ScrollWheel") * scrollSpeed * Time.deltaTime);
 
         if (Vector3.Distance(transform.position, tpsCamera.position) < cameraCloseLimit)
@@ -90,7 +111,9 @@ public class PlayerController : MonoBehaviour
                 if (Physics.Raycast(transform.position, Vector3.down, out hit))
                 {
                     bloodDrip.Play();
-                    Instantiate(blood, hit.point, new Quaternion());
+                    Quaternion bloodAngle = new Quaternion();
+                    bloodAngle = Quaternion.AngleAxis(Random.rotation.x*360, Vector3.up);
+                    Instantiate(blood, hit.point, bloodAngle);
                 }
             }
             else

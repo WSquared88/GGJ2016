@@ -27,7 +27,7 @@ public class BloodCollider : MonoBehaviour
         if (isActiveAndEnabled && other.tag != "undefined" && other.tag.Contains("BloodPool") && NextBloodPool && !isBloodInUpgrade(other))
         {
             Destroy(other.gameObject);
-            Instantiate(NextBloodPool, (transform.position - other.transform.position) * .5f + other.transform.position, new Quaternion());
+            Instantiate(NextBloodPool, (transform.position - other.transform.position) * .5f + other.transform.position, transform.rotation);
             Destroy(gameObject);
         }
     }
