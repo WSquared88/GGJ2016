@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class PlayerController : LivingObject
 {
@@ -38,6 +39,8 @@ public class PlayerController : LivingObject
     bool canMove;
     AudioSource bloodDrip;
     int currentIndex;
+    public CanvasGroup myCanvas;
+    private bool fade;
 
     // Use this for initialization
     void Start ()
@@ -48,6 +51,8 @@ public class PlayerController : LivingObject
         tpsCamera.LookAt(transform);
         bloodDrip = GetComponent<AudioSource>();
         StartCoroutine("dripBlood");
+        myCanvas.alpha = 0f;
+        fade = false;
 	}
 	
 	// Update is called once per frame
@@ -100,6 +105,16 @@ public class PlayerController : LivingObject
         {
             transform.Translate(Input.GetAxis("Horizontal") * speed * Time.deltaTime, 0, Input.GetAxis("Vertical") * speed * Time.deltaTime);
         }
+
+        if (fade)
+        {
+            myCanvas.alpha = myCanvas.alpha + Time.deltaTime;
+            if (myCanvas.alpha >= 1)
+            {
+                myCanvas.alpha = 1;
+                fade = false;
+            }
+        }
     }
 
     
@@ -144,5 +159,12 @@ public class PlayerController : LivingObject
     public int getIndex()
     {
         return currentIndex;
+    }
+
+    protected override void die()
+    {
+        isAlive = false;
+        fade = true;
+
     }
 }
