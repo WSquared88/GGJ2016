@@ -21,28 +21,31 @@ public class Key : InteractableObject
 
     protected override void Trigger(Collider player)
     {
-        bool didWork = false;
         for (int i = 0; i < objectsToActivate.Length; i++)
         {
-            ActivationObject obj = objectsToActivate[i].GetComponent<ActivationObject>();
-            if (obj)
+            if (objectsToActivate[i])
             {
-                obj.activate();
-                didWork = true;
+                ActivationObject obj = objectsToActivate[i].GetComponent<ActivationObject>();
+                if (obj)
+                {
+                    obj.activate();
+                }
             }
         }
 
         for (int i = 0; i < passables.Length; i++)
         {
-            Collider objCollider = passables[i].GetComponent<Collider>();
-            if (objCollider)
+            if (passables[i])
             {
-                Physics.IgnoreCollision(player, passables[i].GetComponent<Collider>());
-                didWork = true;
+                Collider objCollider = passables[i].GetComponent<Collider>();
+                if (objCollider)
+                {
+                    Physics.IgnoreCollision(player, passables[i].GetComponent<Collider>());
+                }
             }
         }
 
-        if (didWork && isActiveAndEnabled)
+        if (isActiveAndEnabled)
         {
             Destroy(gameObject);
         }
