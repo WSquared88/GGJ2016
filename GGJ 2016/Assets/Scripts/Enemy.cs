@@ -20,7 +20,10 @@ public class Enemy : MonoBehaviour
 	void Update ()
     {
         calculateBloodWeighting();
-        agent.SetDestination(target.position);
+        if (target)
+        {
+            agent.SetDestination(target.position);
+        }
 	}
 
     void calculateBloodWeighting()
@@ -31,32 +34,36 @@ public class Enemy : MonoBehaviour
         for (int i = 0; i < bloodList.Count; i++)
         {
             GameObject obj = (GameObject)bloodList[i];
-            int richness = bloodList.Count;
+            BloodCollider blood = obj.GetComponent<BloodCollider>();
+            if (blood)
+            {
+                int richness = blood.getIndex();
 
-            if (obj.tag == "SmallBloodPool")
-            {
-                richness++;
-            }
-            else if (obj.tag == "MedBloodPool")
-            {
-                richness += 3;
-            }
-            else
-            {
-                richness += 7;
-            }
+                if (obj.tag == "SmallBloodPool")
+                {
+                    richness++;
+                }
+                else if (obj.tag == "MedBloodPool")
+                {
+                    richness += 3;
+                }
+                else
+                {
+                    richness += 7;
+                }
 
-            if (richness > highestRichness)
-            {
-                highestRichness = richness;
-                richestBlood = obj;
-            }
-            else if (richness == highestRichness)
-            {
-                if (richness - bloodList.Count > highestRichness - bloodList.Count)
+                if (richness > highestRichness)
                 {
                     highestRichness = richness;
                     richestBlood = obj;
+                }
+                else if (richness == highestRichness)
+                {
+                    if (richness - bloodList.Count > highestRichness - bloodList.Count)
+                    {
+                        highestRichness = richness;
+                        richestBlood = obj;
+                    }
                 }
             }
         }
