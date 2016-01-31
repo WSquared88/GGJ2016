@@ -37,7 +37,7 @@ public class PlayerController : MonoBehaviour
         isAlive = true;
         canMove = true;
         tpsCamera = transform.GetChild(0);
-        tpsCamera.position = transform.position + startingCameraOffset;
+        tpsCamera.position = -transform.forward * startingCameraOffset.magnitude;
         tpsCamera.LookAt(transform);
         bloodDrip = GetComponent<AudioSource>();
         StartCoroutine("dripBlood");
@@ -94,7 +94,9 @@ public class PlayerController : MonoBehaviour
                 if (Physics.Raycast(transform.position, Vector3.down, out hit))
                 {
                     bloodDrip.Play();
-                    Instantiate(blood, hit.point, new Quaternion());
+                    Quaternion bloodAngle = new Quaternion();
+                    bloodAngle = Quaternion.AngleAxis(Random.rotation.x*360, Vector3.up);
+                    Instantiate(blood, hit.point, bloodAngle);
                 }
             }
             else

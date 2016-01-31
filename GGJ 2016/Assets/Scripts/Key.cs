@@ -23,9 +23,16 @@ public class Key : InteractableObject
             ActivationObject obj = objectsToActivate[i].GetComponent<ActivationObject>();
             if (obj)
             {
-                obj.activate();
-                //if(gameObject.)
-                Destroy(gameObject);
+                //obj.activate();
+                Collider objCollider = objectsToActivate[i].GetComponent<Collider>();
+                if (objCollider)
+                {
+                    Physics.IgnoreCollision(player, objectsToActivate[i].GetComponent<Collider>());
+                }
+                if (isActiveAndEnabled)
+                {
+                    Destroy(gameObject);
+                }
             }
         }
     }

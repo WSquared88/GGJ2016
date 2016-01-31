@@ -20,14 +20,20 @@ public class Lever : InteractableObject
 
     protected override void Trigger(Collider player)
     {
+        bool activatedObj = false;
         for (int i = 0; i < objectsToActivate.Length; i++)
         {
             ActivationObject obj = objectsToActivate[i].GetComponent<ActivationObject>();
             if (obj)
             {
                 obj.activate();
-                isActive = !isActive;
+                activatedObj = true;
             }
+        }
+
+        if (activatedObj)
+        {
+            isActive = !isActive;
         }
     }
 }
