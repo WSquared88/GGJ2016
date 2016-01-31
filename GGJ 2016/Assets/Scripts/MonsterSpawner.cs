@@ -17,7 +17,7 @@ public class MonsterSpawner : ActivationObject
 	// Use this for initialization
 	void Start ()
     {
-	
+        timeSinceLastSpawn = spawnCooldown;
 	}
 	
 	// Update is called once per frame
