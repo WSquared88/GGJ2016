@@ -3,7 +3,7 @@ using System.Collections;
 
 public class SampleAgentScript : MonoBehaviour {
 
-	public Transform target;
+	public GameObject target;
 	NavMeshAgent agent;
 
 	// Use this for initialization
@@ -14,7 +14,9 @@ public class SampleAgentScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		agent.SetDestination (target.position);
+
+		target = GameObject.FindWithTag ("Player");
+		agent.SetDestination (target.transform.position);
 	
 	}
 }

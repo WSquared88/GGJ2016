@@ -41,7 +41,7 @@ public class PlayerController : MonoBehaviour
         isAlive = true;
         canMove = true;
         tpsCamera = transform.GetChild(0);
-        tpsCamera.position = -transform.forward * startingCameraOffset.magnitude;
+        tpsCamera.localPosition = startingCameraOffset;
         tpsCamera.LookAt(transform);
         bloodDrip = GetComponent<AudioSource>();
         StartCoroutine("dripBlood");
