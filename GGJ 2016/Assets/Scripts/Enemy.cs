@@ -130,6 +130,10 @@ public class Enemy : LivingObject
     public void removeTarget(Collider other)
     {
         nearbyTargets.Remove(other.gameObject);
+        if (sensesPlayer && other.tag == enemyTarget.tag)
+        {
+            playerDied();
+        }
     }
 
     void EvaluateAllTargets()
@@ -162,7 +166,6 @@ public class Enemy : LivingObject
 
         if (mostEvilObj)
         {
-            Debug.Log("Found EVIL!");
             sensesPlayer = true;
             enemyTarget = mostEvilObj.transform;
             enemyWeight = highestWeight;
