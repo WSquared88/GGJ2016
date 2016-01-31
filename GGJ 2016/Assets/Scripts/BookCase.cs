@@ -5,11 +5,11 @@ using System;
 public class BookCase : InteractableObject
 {
     [SerializeField]
-    protected Vector3 destination;
+    Vector3 openPos;
 
-    float startTime;
     Vector3 startPos;
-    float distance;
+    float startTime;
+    bool isOpen;
 
     // Use this for initialization
     void Start ()
@@ -19,9 +19,19 @@ public class BookCase : InteractableObject
 
     protected override void Trigger(Collider player)
     {
-        player.GetComponent<PlayerController>().StartCoroutine("stopMoving", useTime);
-        isInUse = true;
-        Lerping.DoCoroutine(Lerping.LerpTo(transform, transform.position, startPos+destination, useTime, stopUsing));
+        if (!isInUse)
+        {
+            isInUse = true;
+            player.GetComponent<PlayerController>().StartCoroutine("stopMoving", useTime);
+            if (isOpen)
+            {
+                Lerping.DoCoroutine(Lerping.LerpTo(transform, transform.position, startPos, useTime, stopUsing));
+            }
+            else
+            {
+                Lerping.DoCoroutine(Lerping.LerpTo(transform, transform.position, transform.position + openPos, useTime, stopUsing));
+            }
+        }
     }
 
     void stopUsing()
@@ -29,6 +39,7 @@ public class BookCase : InteractableObject
         if (isReuseable)
         {
             isInUse = false;
+            isOpen = !isOpen;
         }
     }
 }
