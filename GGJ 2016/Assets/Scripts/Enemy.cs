@@ -29,6 +29,7 @@ public class Enemy : LivingObject
     {
         agent = GetComponent<NavMeshAgent>();
         bloodList = new ArrayList();
+        nearbyTargets = new ArrayList();
 	}
 	
 	// Update is called once per frame
@@ -107,13 +108,13 @@ public class Enemy : LivingObject
 
         for (int i = 0; i < wantedList.Length; i++)
         {
-            if (wantedList[i].target && wantedList[i].target.tag == other.tag)
+            if (wantedList[i].target && other.gameObject && wantedList[i].target.tag == other.tag)
             {
                 nearbyTargets.Add(other.gameObject);
                 if (wantedList[i].weight > enemyWeight)
                 {
                     highestWeight = wantedList[i].weight;
-                    mostEvilObj = wantedList[i].target;
+                    mostEvilObj = other.gameObject;
                 }
             }
         }
@@ -129,6 +130,10 @@ public class Enemy : LivingObject
     public void removeTarget(Collider other)
     {
         nearbyTargets.Remove(other.gameObject);
+        if (sensesPlayer && other.tag == enemyTarget.tag)
+        {
+            playerDied();
+        }
     }
 
     void EvaluateAllTargets()
@@ -140,14 +145,21 @@ public class Enemy : LivingObject
         {
             for (int j = 0; j < wantedList.Length; j++)
             {
-                GameObject obj = (GameObject)nearbyTargets[i];
-                if (wantedList[j].target && obj && wantedList[j].target.tag == obj.tag)
+                if (nearbyTargets[i] != null)
                 {
-                    if (wantedList[j].weight > highestWeight)
+                    GameObject obj = (GameObject)nearbyTargets[i];
+                    if (wantedList[j].target && obj && wantedList[j].target.tag == obj.tag)
                     {
-                        highestWeight = wantedList[j].weight;
-                        mostEvilObj = wantedList[j].target;
+                        if (wantedList[j].weight > highestWeight)
+                        {
+                            highestWeight = wantedList[j].weight;
+                            mostEvilObj = obj;
+                        }
                     }
+                }
+                else
+                {
+                    nearbyTargets.RemoveAt(i);
                 }
             }
         }

@@ -1,15 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+
+[RequireComponent (typeof(Animator))]
 public class Lever : InteractableObject
 {
     [SerializeField]
     bool isActive;
-
+	private Animator anim;
 	// Use this for initialization
 	void Start ()
     {
-
+		gameObject.GetComponent<Animator> ();
 	}
 	
 	// Update is called once per frame
@@ -33,5 +35,6 @@ public class Lever : InteractableObject
         }
 
         isActive = !isActive;
+		anim.SetBool("On_Off",isActive);
     }
 }

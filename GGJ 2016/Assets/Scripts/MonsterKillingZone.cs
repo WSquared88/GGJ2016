@@ -22,6 +22,11 @@ public class MonsterKillingZone : MonoBehaviour
         timeSinceLastDamage += Time.deltaTime;
 	}
 
+    void OnTriggerEnter(Collider other)
+    {
+
+    }
+
     void OnTriggerStay(Collider other)
     {
         if (timeSinceLastDamage >= damageCooldown && (other.tag == "Player" || other.tag == "Monster"))
@@ -37,5 +42,10 @@ public class MonsterKillingZone : MonoBehaviour
             }
             timeSinceLastDamage = 0;
         }
+    }
+
+    void OnTriggerExit(Collider other)
+    {
+
     }
 }
