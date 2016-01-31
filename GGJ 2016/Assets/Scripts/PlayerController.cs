@@ -3,6 +3,7 @@ using System.Collections;
 
 public class PlayerController : MonoBehaviour
 {
+    #region player
     [SerializeField]
     float sensitivityX;
     [SerializeField]
@@ -11,7 +12,11 @@ public class PlayerController : MonoBehaviour
     float fastTurnLimit;
     [SerializeField]
     float playerSpeed;
+    [SerializeField]
+    float health;
+    #endregion
 
+    #region camera
     [Header("Camera"), SerializeField]
     Vector3 startingCameraOffset;
     [SerializeField]
@@ -24,19 +29,23 @@ public class PlayerController : MonoBehaviour
     float cameraLowerAngleLimit;
     [SerializeField]
     float cameraUpperAngleLimit;
+    #endregion
 
+    #region blood
     [Header("Blood"), SerializeField]
     float dripTime;
     [SerializeField]
     Object blood;
+    #endregion
 
     Transform tpsCamera;
     bool isAlive;
     bool canMove;
     AudioSource bloodDrip;
+    int currentIndex;
 
-	// Use this for initialization
-	void Start ()
+    // Use this for initialization
+    void Start ()
     {
         isAlive = true;
         canMove = true;
@@ -99,6 +108,21 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    void TakeDamage(float damage)
+    {
+        health -= damage;
+        if (health <= 0)
+        {
+            die();
+        }
+    }
+
+    void die()
+    {
+        isAlive = false;
+        Destroy(gameObject);
+    }
+
     IEnumerator dripBlood()
     {
         while (isAlive)
@@ -114,6 +138,7 @@ public class PlayerController : MonoBehaviour
                     Quaternion bloodAngle = new Quaternion();
                     bloodAngle = Quaternion.AngleAxis(Random.rotation.x*360, Vector3.up);
                     Instantiate(blood, hit.point, bloodAngle);
+                    currentIndex++;
                 }
             }
             else
@@ -133,5 +158,10 @@ public class PlayerController : MonoBehaviour
     void startMoving()
     {
         canMove = true;
+    }
+
+    public int getIndex()
+    {
+        return currentIndex;
     }
 }
