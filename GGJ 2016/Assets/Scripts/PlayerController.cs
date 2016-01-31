@@ -20,6 +20,10 @@ public class PlayerController : MonoBehaviour
     float cameraCloseLimit;
     [SerializeField]
     float cameraFarLimit;
+    [SerializeField]
+    float cameraLowerAngleLimit;
+    [SerializeField]
+    float cameraUpperAngleLimit;
 
     [Header("Blood"), SerializeField]
     float dripTime;
@@ -57,8 +61,21 @@ public class PlayerController : MonoBehaviour
         transform.Rotate(Vector3.up, xMovement);
         tpsCamera.RotateAround(transform.position, -transform.right, yMovement);
 
-        float angle = Vector3.Angle(transform.position, tpsCamera.position);
-        Debug.Log("angle " + angle);
+        float angle = Vector3.Angle(-transform.forward, tpsCamera.position-transform.position);
+        if (tpsCamera.position.y < transform.position.y)
+        {
+            if (angle > cameraLowerAngleLimit)
+            {
+                tpsCamera.RotateAround(transform.position, transform.right, angle - cameraLowerAngleLimit);
+            }
+        }
+        else
+        {
+            if (angle > cameraUpperAngleLimit)
+            {
+                tpsCamera.RotateAround(transform.position, -transform.right, angle - cameraUpperAngleLimit);
+            }
+        }
 
         tpsCamera.Translate(0, 0, Input.GetAxis("Mouse ScrollWheel") * scrollSpeed * Time.deltaTime);
 
